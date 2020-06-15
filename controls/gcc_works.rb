@@ -9,7 +9,7 @@ control 'core-plans-gcc' do
   impact 1.0
   title 'Ensure gcc is working as expected'
   desc '
-  We first check that the gcc & gcc.real executables are present and then runs version checks on both to verify that they are executable.
+  We first check that the gcc.real executable is present and then runs version checks to verify that the binary is executable.
   '
 
   hab_pkg_path = command("hab pkg path #{plan_ident}")
@@ -20,17 +20,17 @@ control 'core-plans-gcc' do
 
   target_dir = File.join(hab_pkg_path.stdout.strip, base_dir)
 
-  gcc_version = command("#{File.join(target_dir, "gcc")} -v")
-  describe gcc_version do
-    its('stdout') { should be_empty }
-    its('stderr') { should match /gcc version [0-9].[0-9].[0-9]/ }
+  gcc_real_exists = command("ls -al #{File.join(target_dir, "gcc.real")}")
+  describe gcc_real_exists do
+    its('stdout') { should match /gcc.real/ }
+    its('stderr') { should be_empty }
     its('exit_status') { should eq 0 }
   end
 
-  gcc_real_version = command("#{File.join(target_dir, "gcc.real")} -v")
+  gcc_real_version = command("/bin/gcc.real --version")
   describe gcc_real_version do
-    its('stdout') { should be_empty }
-    its('stderr') { should match /gcc version [0-9].[0-9].[0-9]/ }
+    its('stdout') { should match /[0-9]+.[0-9]+.[0-9]+/ }
+    its('stderr') { should be_empty }
     its('exit_status') { should eq 0 }
   end
 end
