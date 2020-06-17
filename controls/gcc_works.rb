@@ -18,7 +18,6 @@ control 'core-plans-gcc' do
     its('exit_status') { should eq 0 }
     its('stdout') { should_not be_empty }
   end
-
   target_dir = File.join(hab_pkg_path.stdout.strip, base_dir)
 
   gcc_exists = command("ls -al #{File.join(target_dir, "gcc")}")
@@ -28,7 +27,7 @@ control 'core-plans-gcc' do
     its('exit_status') { should eq 0 }
   end
 
-  gcc_version = command("/bin/gcc --version")
+  gcc_version = command("#{target_dir}/gcc --version")
   describe gcc_version do
     its('stdout') { should match /[0-9]+.[0-9]+.[0-9]+/ }
     its('stderr') { should be_empty }
@@ -42,7 +41,7 @@ control 'core-plans-gcc' do
     its('exit_status') { should eq 0 }
   end
 
-  gcc_real_version = command("/bin/gcc.real --version")
+  gcc_real_version = command("#{target_dir}/gcc.real --version")
   describe gcc_real_version do
     its('stdout') { should match /[0-9]+.[0-9]+.[0-9]+/ }
     its('stderr') { should be_empty }
