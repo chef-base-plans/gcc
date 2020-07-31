@@ -4,7 +4,6 @@ base_dir = input("base_dir", value: "bin")
 plan_origin = ENV['HAB_ORIGIN']
 plan_name = input("plan_name", value: "gcc")
 plan_ident = "#{plan_origin}/#{plan_name}"
-hab_path = input('hab_path', value: '/tmp/hab')
 
 control 'core-plans-gcc' do
   impact 1.0
@@ -15,7 +14,7 @@ control 'core-plans-gcc' do
   stderr tests are not included due to an issue with hab
   '
 
-  hab_pkg_path = command("#{hab_path} pkg path #{plan_ident}")
+  hab_pkg_path = command("hab pkg path #{plan_ident}")
   describe hab_pkg_path do
     its('exit_status') { should eq 0 }
     its('stdout') { should_not be_empty }
